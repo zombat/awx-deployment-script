@@ -1,0 +1,31 @@
+apiVersion: awx.ansible.com/v1beta1
+kind: AWX
+metadata:
+  name: awx
+spec:
+  admin_user: <ADMIN_USER>
+  admin_password_secret: awx-admin-password
+  ee_extra_env: |
+    - name: RECEPTOR_KUBESUPPORT_RECONNECT
+      value: enabled
+  web_resource_requirements:
+    requests:
+      cpu: 250m
+      memory: 2Gi
+    limits:
+      cpu: 1000m
+      memory: 4Gi
+  task_resource_requirements:
+    requests:
+      cpu: 250m
+      memory: 1Gi
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+  ee_resource_requirements:
+    requests:
+      cpu: 250m
+      memory: 250Mi
+    limits:
+      cpu: 2000m
+      memory: 2Gi

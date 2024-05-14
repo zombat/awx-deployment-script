@@ -1,0 +1,6 @@
+*.key
+*.crt
+k3s/*
+!k3s/k3s_tool.sh
+operator/*/
+!operator/templates/

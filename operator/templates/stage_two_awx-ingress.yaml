@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: awx-ingress
+  namespace: <NAMESPACE>
+  annotations:
+    traefik.ingress.kubernetes.io/rewrite-target: /
+spec:
+  tls:
+  - hosts:
+    - <AWX_FQDN>
+    secretName: awx-tls
+  rules:
+  - host: <AWX_FQDN>
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: awx-service
+            port:
+              number: 80

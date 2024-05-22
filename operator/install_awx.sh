@@ -151,7 +151,7 @@ apply_kustomization "stage_two"
 echo ""
 echo ""
 echo "Wait for 2 minutes and check: http://$awx_fqdn"
-echo "You can also run: kubectl get pods -n $namespace"
+echo "You can also run: watch kubectl get pods -n $namespace"
 echo "You can also watch the logs with: kubectl logs -f deployments/awx-operator-controller-manager -c awx-manager --namespace $namespace"
 
 echo ""

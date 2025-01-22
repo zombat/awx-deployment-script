@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: awx-ingress
+  name: <NAMESPACE>-ingress
   namespace: <NAMESPACE>
   annotations:
     traefik.ingress.kubernetes.io/rewrite-target: /
@@ -18,6 +18,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: awx-service
+            name: <NAMESPACE>-service
             port:
               number: 80

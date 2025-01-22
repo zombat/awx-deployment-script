@@ -5,8 +5,6 @@ k3s_versions() {
   curl -s https://api.github.com/repos/k3s-io/k3s/releases | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'
 }
 
-
-
 check_and_disable_selinux() {
     if [ -f /etc/selinux/config ] && [ "$(getenforce)" = "Enforcing" ]; then
         echo ""
@@ -61,7 +59,6 @@ fetch_file() {
     echo "$file exists"
   fi
 }
-
 
 # Uninstall k3s
 if [ "$1" == "--remove-k3s" ]; then
@@ -121,6 +118,31 @@ if [ "$1" == "--offline-install" ]; then
   kubectl describe nodes > k3s.nodes.log
 fi
 
+# Online add node
+if [ "$1" == "--add-node-online" ]; then
+  echo "Enter the IP address of the k3s server:"
+  read -p "Server IP: " server_ip
+  echo "Enter the token for joining the cluster:"
+  read -p "Token: " token
+  curl -sfL https://get.k3s.io | K3S_URL=https://$server_ip:6443 K3S_TOKEN=$token sh -
+fi
+
+# Offline add node
+if [ "$1" == "--add-node-offline" ]; then
+  if [ ! -f ./install.sh ] || [ ! -f ./k3s-airgap-images-amd64.tar.gz ] || [ ! -f ./k3s ]; then
+    echo "Missing files for installation."
+    exit 1
+  fi
+  echo "Enter the IP address of the k3s server:"
+  read -p "Server IP: " server_ip
+  echo "Enter the token for joining the cluster:"
+  read -p "Token: " token
+  chmod +x ./install.sh ./k3s
+  sudo cp ./k3s /usr/local/bin/k3s
+  sudo cp ./k3s /usr/bin/k3s
+  ./install.sh --server https://$server_ip:6443 --token $token
+fi  
+
 # Display options if no arguments are provided
 if [ -z "$1" ]; then
   echo "Usage: $0 [option]"
@@ -129,4 +151,6 @@ if [ -z "$1" ]; then
   echo "  --online-install: Install k3s online"
   echo "  --offline-prep: Prepare for offline installation"
   echo "  --offline-install: Install k3s offline"
+  echo "  --add-node-online: Add a node to the cluster online"
+  echo "  --add-node-offline: Add a node to the cluster offline"
 fi

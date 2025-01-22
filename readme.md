@@ -15,6 +15,8 @@ Options
     --online-install: Install K3s online.
     --offline-prep: Prepare files for offline installation.
     --offline-install: Install K3s offline.
+    --add-node-online: Add a node to the cluster online.
+    --add-node-offline: Add a node to the cluster offline.
 ```
 
 ## AWX Deployment Script

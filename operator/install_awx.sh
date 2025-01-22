@@ -121,13 +121,15 @@ fi
 # Create configurations
 cp "./templates/stage_one_kustomization.yml" "./stage_one/kustomization.yaml"
 cp "./templates/stage_two_kustomization.yml" "./stage_two/kustomization.yaml"
-cp "./templates/stage_two_awx.yaml" "./stage_two/awx.yaml"
-cp "./templates/stage_two_awx-ingress.yaml" "./stage_two/awx-ingress.yaml"
+cp "./templates/stage_two_automation-platform.yaml" "./stage_two/awx.yaml"
+cp "./templates/stage_two_automation-platform-ingress.yaml" "./stage_two/awx-ingress.yaml"
 
 # Substitute placeholders
 sed -i "s/<NAMESPACE>/$namespace/g" ./stage_one/kustomization.yaml ./stage_two/kustomization.yaml
 sed -i "s/<OPERATOR_VERSION>/$operator_version/g" ./stage_one/kustomization.yaml ./stage_two/kustomization.yaml
 sed -i "s/<ADMIN_USER>/$username/g" ./stage_two/awx.yaml
+sed -i "s/<NAME>/$namespace/g" ./stage_two/awx.yaml
+sed -i "s/<NAMESPACE>/$namespace/g" ./stage_two/awx.yaml
 sed -i "s/<AWX_FQDN>/$awx_fqdn/g" ./stage_two/awx-ingress.yaml
 sed -i "s/<NAMESPACE>/$namespace/g" ./stage_two/awx-ingress.yaml
 

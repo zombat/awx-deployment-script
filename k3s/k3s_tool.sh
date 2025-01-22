@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Function to find k3s versions in repository
+k3s_versions() {
+  curl -s https://api.github.com/repos/k3s-io/k3s/releases | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'
+}
+
+
+
 check_and_disable_selinux() {
     if [ -f /etc/selinux/config ] && [ "$(getenforce)" = "Enforcing" ]; then
         echo ""
@@ -55,6 +62,7 @@ fetch_file() {
   fi
 }
 
+
 # Uninstall k3s
 if [ "$1" == "--remove-k3s" ]; then
   k3s-uninstall.sh
@@ -81,10 +89,14 @@ fi
 
 # Offline preparation
 if [ "$1" == "--offline-prep" ]; then
+  echo "Select k3s version for offline installation:"
+  k3s_versions
+  read -p "Enter k3s version: " version
+
   fetch_file "https://get.k3s.io" "./install.sh"
-  fetch_file "https://github.com/k3s-io/k3s/releases/download/v1.29.1-rc2+k3s1/k3s-airgap-images-amd64.tar.gz" "./k3s-airgap-images-amd64.tar.gz"
-  fetch_file "https://github.com/k3s-io/k3s/releases/download/v1.29.1-rc2+k3s1/k3s" "./k3s"
-  fetch_file "https://github.com/k3s-io/k3s-selinux/releases/download/v1.0.1-rc1+k3s1/k3s-selinux.tar.gz" "./k3s-selinux.tar.gz"
+  fetch_file "https://github.com/k3s-io/k3s/releases/download/$version/k3s-airgap-images-amd64.tar.gz" "./k3s-airgap-images-amd64.tar.gz"
+  fetch_file "https://github.com/k3s-io/k3s/releases/download/$version/k3s" "./k3s"
+  fetch_file "https://github.com/k3s-io/k3s-selinux/releases/download/$version/k3s-selinux.tar.gz" "./k3s-selinux.tar.gz"
 fi
 
 # Offline installation

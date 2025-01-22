@@ -124,6 +124,13 @@ if [ "$1" == "--add-node-online" ]; then
   read -p "Server IP: " server_ip
   echo "Enter the token for joining the cluster:"
   read -p "Token: " token
+  # Get kubeconfig from server
+  mkdir -p ~/.kube
+  scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $server_ip:/etc/rancher/k3s/k3s.yaml ~/.kube/config
+  export KUBECONFIG=~/.kube/config
+  # replace server IP in kubeconfig
+  sed -i "s/127.0.0.1/$server_ip/g" ~/.kube/config
+  echo "export KUBECONFIG=~/.kube/config" >> ~/.bashrc
   curl -sfL https://get.k3s.io | K3S_URL=https://$server_ip:6443 K3S_TOKEN=$token sh -
 fi
 
@@ -135,11 +142,20 @@ if [ "$1" == "--add-node-offline" ]; then
   fi
   echo "Enter the IP address of the k3s server:"
   read -p "Server IP: " server_ip
+  echo "To find the token, run the following command on the server:"
+  echo "sudo cat /var/lib/rancher/k3s/server/node-token"
   echo "Enter the token for joining the cluster:"
   read -p "Token: " token
   chmod +x ./install.sh ./k3s
   sudo cp ./k3s /usr/local/bin/k3s
   sudo cp ./k3s /usr/bin/k3s
+  # Get kubeconfig from server
+  mkdir -p ~/.kube
+  scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $server_ip:/etc/rancher/k3s/k3s.yaml ~/.kube/config
+  export KUBECONFIG=~/.kube/config
+  # replace server IP in kubeconfig
+  sed -i "s/127.0.0.1/$server_ip/g" ~/.kube/config
+  echo "export KUBECONFIG=~/.kube/config" >> ~/.bashrc
   ./install.sh --server https://$server_ip:6443 --token $token
 fi  
 

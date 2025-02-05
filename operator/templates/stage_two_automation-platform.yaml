@@ -1,7 +1,7 @@
 apiVersion: awx.ansible.com/v1beta1
 kind: AWX
 metadata:
-  name: <NAMESPACE>
+  name: <NAMESPACE>-service
   namespace: <NAMESPACE>
 spec:
   admin_user: <ADMIN_USER>
